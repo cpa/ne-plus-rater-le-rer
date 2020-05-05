@@ -9,7 +9,7 @@ app = Flask(__name__)
 def compute_eta(message, timestamp):
     if message[2] == ':' and int(message[:2]) in range(24):
         h = int(message[:2])
-        m = int(message[3:])
+        m = int(message[3:5])
         eta = str(((h - timestamp.hour)%24)*60 + m - timestamp.minute)
     else:
         eta = ''
@@ -60,12 +60,12 @@ def index():
     r1 = requests.get('https://api-ratp.pierre-grimaud.fr/v3/schedules/rers/B/bagneux/A').json()
     r2 = requests.get('https://api-ratp.pierre-grimaud.fr/v3/schedules/rers/B/denfert-rochereau/R').json()
 
-    c1 = make_cards(r1, style='background-color: #FFE0B2', direction='up')
-    c2 = make_cards(r2, style='background-color: #B2DFDB', direction='down')
+    c1 = make_cards(r1, style='background-color: #FFE0B2', direction='↑')
+    c2 = make_cards(r2, style='background-color: #B2DFDB', direction='↓')
 
     sB = requests.get('https://api-ratp.pierre-grimaud.fr/v3/traffic/rers/B').json()
     s6 = requests.get('https://api-ratp.pierre-grimaud.fr/v3/traffic/metros/6').json()
 
     return render_template('index.j2.html', cards=c1+c2, statusB=sB, status6=s6)
 
-# app.run(host='0.0.0.0', port=8000, debug=False)
+# app.run(host='0.0.0.0', port=8000, debug=True)
